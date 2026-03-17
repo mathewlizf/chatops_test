@@ -7,10 +7,10 @@ pipeline {
     spec:
       containers:
       - name: jnlp
-        image: jenkins/inbound-agent:latest
+        image: m.daocloud.io/docker.io/jenkins/inbound-agent:latest
         imagePullPolicy: IfNotPresent
       - name: docker
-        image: docker:24-cli
+        image: m.daocloud.io/docker.io/library/docker:24-cli
         imagePullPolicy: IfNotPresent
         command: ['cat']
         tty: true
