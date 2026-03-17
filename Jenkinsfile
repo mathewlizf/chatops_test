@@ -1,8 +1,26 @@
 pipeline {
-    agent any
-    environment {
-        IMAGE_NAME = 'chatops-test'
-        IMAGE_TAG  = "${BUILD_NUMBER}"
+    agent {
+      kubernetes {
+        yaml """
+    apiVersion: v1
+    kind: Pod
+    spec:
+      containers:
+      - name: jnlp
+        image: jenkins/inbound-agent:latest
+      - name: docker
+        image: docker:24-cli
+        command: ['cat']
+        tty: true
+        volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+      volumes:
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+    """
+      }
     }
     stages {
         stage('Checkout') {
@@ -12,7 +30,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                sh "docker build -t chatops-test:latest ."
             }
         }
         stage('Deploy to K8s') {
