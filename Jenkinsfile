@@ -18,7 +18,7 @@ pipeline {
         - name: docker-sock
           mountPath: /var/run/docker.sock
       - name: kubectl
-        image: m.daocloud.io/docker.io/bitnami/kubectl:latest
+        image: m.daocloud.io/docker.io/alpine/k8s:1.32.3
         imagePullPolicy: IfNotPresent
         command: ['cat']
         tty: true
