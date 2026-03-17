@@ -17,6 +17,11 @@ pipeline {
         volumeMounts:
         - name: docker-sock
           mountPath: /var/run/docker.sock
+      - name: kubectl
+        image: m.daocloud.io/docker.io/bitnami/kubectl:latest
+        imagePullPolicy: IfNotPresent
+        command: ['cat']
+        tty: true
       volumes:
       - name: docker-sock
         hostPath:
@@ -32,13 +37,17 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t chatops-test:latest ."
+                container('docker') {
+                    sh "docker build -t chatops-test:latest ."
+                }
             }
         }
         stage('Deploy to K8s') {
             steps {
-                sh "kubectl apply -f k8s/deployment.yaml"
-                sh "kubectl apply -f k8s/service.yaml"
+                container('kubectl') {
+                    sh "kubectl apply -f k8s/deployment.yaml"
+                    sh "kubectl apply -f k8s/service.yaml"
+                }
             }
         }
     }
