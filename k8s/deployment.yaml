@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatops-test
+  namespace: default
+  labels:
+    app: chatops-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chatops-test
+  template:
+    metadata:
+      labels:
+        app: chatops-test
+    spec:
+      containers:
+        - name: chatops-test
+          image: chatops-test:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
