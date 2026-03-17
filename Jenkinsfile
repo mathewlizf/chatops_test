@@ -8,8 +8,10 @@ pipeline {
       containers:
       - name: jnlp
         image: jenkins/inbound-agent:latest
+        imagePullPolicy: IfNotPresent
       - name: docker
         image: docker:24-cli
+        imagePullPolicy: IfNotPresent
         command: ['cat']
         tty: true
         volumeMounts:
